@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Skin Ailment Classifier</title>
+  <!-- Link to the external CSS file -->
+  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
+  <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1 class ="header">test</h1>
+    <p>Upload an image (jpg, jpeg, png, bmp, tiff). The system will return the top predictions and short descriptions.</p>
+    
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+        {% for msg in messages %}
+          <li class="bad">{{ msg }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <div class="uploader">
+      <form method="post" action="/predict" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*" required />
+        <div style="margin-top:12px"><button type="submit">Upload & Predict</button></div>
+      </form>
+    </div>
+
+    {% if results %}
+      <div class="result">
+        <h3>Results</h3>
+        <p><strong>File:</strong> {{ filename }}</p>
+        <ol>
+        {% for cls, prob in results %}
+          <li><strong>{{ cls }}</strong> — {{ '%.2f'|format(prob*100) }}%<br/>
+              <em>{{ descriptions.get(cls, 'No description available.') }}</em>
+          </li>
+        {% endfor %}
+        </ol>
+      </div>
+    {% endif %}
+
+    <hr/>
+    <p style="font-size:0.9em;color:#555"><strong>Disclaimer:</strong> This tool provides model-based predictions for educational/prototyping purposes and is not a medical diagnosis. Consult a qualified healthcare professional for medical advice.</p>
+  </div>
+</body>
+</html>
