@@ -1,51 +1,90 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Skin Ailment Classifier</title>
-  <!-- Link to the external CSS file -->
-  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
-  <link rel="stylesheet" href="../static/style.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
-  <div class="container">
-    <h1 class ="header">test</h1>
-    <p>Upload an image (jpg, jpeg, png, bmp, tiff). The system will return the top predictions and short descriptions.</p>
-    
+  <div class="page-shell">
+    <header class="page-header">
+      <h1>Skin ailment prediction</h1>
+    </header>
+
     {% with messages = get_flashed_messages() %}
       {% if messages %}
-        <ul>
-        {% for msg in messages %}
-          <li class="bad">{{ msg }}</li>
-        {% endfor %}
-        </ul>
+        <div class="flash-list">
+          {% for msg in messages %}
+            <div class="flash-item">{{ msg }}</div>
+          {% endfor %}
+        </div>
       {% endif %}
     {% endwith %}
 
-    <div class="uploader">
-      <form method="post" action="/predict" enctype="multipart/form-data">
-        <input type="file" name="file" accept="image/*" required />
-        <div style="margin-top:12px"><button type="submit">Upload & Predict</button></div>
-      </form>
-    </div>
+    <main class="main-grid">
 
-    {% if results %}
-      <div class="result">
-        <h3>Results</h3>
-        <p><strong>File:</strong> {{ filename }}</p>
-        <ol>
-        {% for cls, prob in results %}
-          <li><strong>{{ cls }}</strong> — {{ '%.2f'|format(prob*100) }}%<br/>
-              <em>{{ descriptions.get(cls, 'No description available.') }}</em>
-          </li>
-        {% endfor %}
-        </ol>
-      </div>
-    {% endif %}
+      <!-- LEFT: Uploaded image panel -->
+      <section class="panel panel-left">
+        <h2 class="panel-title">Uploaded Image</h2>
+        <div class="panel-body">
+          {% if filename %}
+            <img src="{{ url_for('uploaded_file', filename=filename) }}" alt="Uploaded" class="panel-img">
+          {% else %}
+            <div class="placeholder large"></div>
+          {% endif %}
+        </div>
+      </section>
 
-    <hr/>
-    <p style="font-size:0.9em;color:#555"><strong>Disclaimer:</strong> This tool provides model-based predictions for educational/prototyping purposes and is not a medical diagnosis. Consult a qualified healthcare professional for medical advice.</p>
+      <!-- CENTER: Heatmap / prediction highlights -->
+      <section class="panel panel-center">
+        <h2 class="panel-title">Prediction highlights</h2>
+        <div class="panel-body">
+          {% if overlay_filename %}
+            <img src="{{ url_for('uploaded_file', filename=overlay_filename) }}" alt="Prediction Overlay" class="panel-img">
+          {% else %}
+            <div class="placeholder large"></div>
+          {% endif %}
+        </div>
+      </section>
+
+      <!-- RIGHT: Results + uploader dock -->
+      <aside class="panel panel-right">
+        <h2 class="panel-title">Result</h2>
+        <div class="panel-body result-body">
+          {% if results %}
+            <ol class="results-list">
+              {% for cls, prob in results %}
+                <li class="result-item">
+                  <div class="result-main"><strong>{{ cls }}</strong> — {{ '%.2f'|format(prob*100) }}%</div>
+                  <div class="result-desc"><em>{{ descriptions.get(cls, 'No description available.') }}</em></div>
+                </li>
+              {% endfor %}
+            </ol>
+          {% else %}
+            <div class="placeholder small">Result</div>
+          {% endif %}
+        </div>
+
+        <!-- uploader dock positioned under results (dashed rounded area) -->
+        <div class="uploader-dock">
+          <form method="post" action="/predict" enctype="multipart/form-data" class="uploader-form">
+            <label class="file-chooser">
+              <input type="file" name="file" accept="image/*" required />
+            </label>
+
+            <div class="predict-row">
+              <button type="submit" class="predict-btn">Predict</button>
+            </div>
+          </form>
+        </div>
+      </aside>
+
+    </main>
+
+    <footer class="page-footer">
+      <p class="disclaimer"><strong>Disclaimer:</strong> This tool provides model based predictions for educational and prototyping purposes and is not a medical diagnosis.</p>
+    </footer>
   </div>
 </body>
 </html>

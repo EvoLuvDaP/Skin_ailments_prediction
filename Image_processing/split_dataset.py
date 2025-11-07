@@ -1,47 +1,43 @@
-import os
-import shutil
-import random
+#!/usr/bin/env python3
 
-# Paths
-src_dir = r"/home/phamtiendat/Documents/ComputerVision/Image_processing/Raw_Images"
-dst_dir = r"/home/phamtiendat/Documents/ComputerVision/Image_processing/Dataset"
+import os, shutil, random
+from pathlib import Path
 
-# Split ratios
-train_ratio = 0.7
-val_ratio = 0.2
-test_ratio = 0.1
+# === CONFIGURATION ===
+SRC_DIR = Path("/home/phamtiendat/Documents/ComputerVision/Image_processing/Raw_Images")
+DST_DIR = Path("/home/phamtiendat/Documents/ComputerVision/Image_processing/Dataset_split")
+TRAIN_RATIO, VAL_RATIO, TEST_RATIO = 0.7, 0.2, 0.1
+SEED = 42
+# ======================
 
-# Seed for reproducibility
-random.seed(42)
+def split_dataset():
+    random.seed(SEED)
+    if DST_DIR.exists():
+        print(f"Removing old dataset: {DST_DIR}")
+        shutil.rmtree(DST_DIR)
+    (DST_DIR / "train").mkdir(parents=True, exist_ok=True)
+    (DST_DIR / "val").mkdir(parents=True, exist_ok=True)
+    (DST_DIR / "test").mkdir(parents=True, exist_ok=True)
 
-# Create output directories
-for split in ["train", "val", "test"]:
-    split_path = os.path.join(dst_dir, split)
-    os.makedirs(split_path, exist_ok=True)
+    classes = sorted([d for d in SRC_DIR.iterdir() if d.is_dir()])
+    for cls in classes:
+        print(f"Processing class: {cls.name}")
+        images = sorted([f for f in cls.iterdir() if f.suffix.lower() in {".jpg", ".jpeg", ".png"}])
+        random.shuffle(images)
+        n = len(images)
+        n_train = int(n * TRAIN_RATIO)
+        n_val = int(n * VAL_RATIO)
+        splits = {
+            "train": images[:n_train],
+            "val": images[n_train:n_train+n_val],
+            "test": images[n_train+n_val:]
+        }
+        for split, files in splits.items():
+            outdir = DST_DIR / split / cls.name
+            outdir.mkdir(parents=True, exist_ok=True)
+            for f in files:
+                shutil.copy2(f, outdir / f.name)
+    print("✅ Dataset split complete.")
 
-# Iterate through each class folder
-for class_name in os.listdir(src_dir):
-    class_path = os.path.join(src_dir, class_name)
-    if not os.path.isdir(class_path):
-        continue
-
-    # Get all files in this class
-    files = os.listdir(class_path)
-    random.shuffle(files)
-
-    total = len(files)
-    train_count = int(total * train_ratio)
-    val_count = int(total * val_ratio)
-
-    train_files = files[:train_count]
-    val_files = files[train_count:train_count + val_count]
-    test_files = files[train_count + val_count:]
-
-    # Copy files to respective folders
-    for split, split_files in zip(["train", "val", "test"], [train_files, val_files, test_files]):
-        split_class_dir = os.path.join(dst_dir, split, class_name)
-        os.makedirs(split_class_dir, exist_ok=True)
-        for file in split_files:
-            shutil.copy2(os.path.join(class_path, file), os.path.join(split_class_dir, file))
-
-print("✅ Dataset successfully split into train, val, and test sets!")
+if __name__ == "__main__":
+    split_dataset()
