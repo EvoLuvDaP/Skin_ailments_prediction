@@ -2,29 +2,14 @@
 
 This project is a web application that utilizes a machine learning model to predict skin ailments from user-uploaded images. The model provides a list of potential conditions with corresponding probabilities, and a visual "Prediction Highlight" to show which part of the image was most influential in the decision.
 
-## 🚀 Features
-
-*   **Image Upload:** Easily upload an image of a skin condition.
-*   **AI-Powered Prediction:** A deep learning model analyzes the image to predict potential skin ailments.
-*   **Prediction Highlight:** A visual heatmap indicates the area of the image that the model focused on for its prediction.
-*   **Detailed Results:** The top predictions are displayed with their confidence scores and brief descriptions.
-
-## 🛠️ Technologies Used
-
-*   **Backend:** Python with a web framework like Flask or Django.
-*   **Machine Learning:** A deep learning framework such as TensorFlow, Keras, or PyTorch.
+*   **Backend:**  Flask.
+*   **Frame work & Model:** PyTorch + RestNet50.
 *   **Frontend:** HTML, CSS, and JavaScript for the user interface.
 
 ## <caption> UI Screenshot
-
-![Skin Ailment Prediction Screenshot](https://i.imgur.com/example.png)  <!-- You should replace this with a direct link to your screenshot -->
-
-### Example from Screenshot
-
-*   **Vitiligo:** 96.47%
-*   **Unknown\_Normal:** 2.19%
-*   **Nail\_psoriasis:** 0.61%
-
+<div align="center">
+  <img src="ui.png" alt="screenshot" width="640" />
+</div>
 ##  Installation and Setup
 
 To get this project up and running on your local machine, follow these steps:
