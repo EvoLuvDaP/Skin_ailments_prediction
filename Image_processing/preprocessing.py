@@ -8,7 +8,7 @@ from tqdm import tqdm
 # === CONFIGURATION ===
 SRC_DIR = Path("/home/phamtiendat/Documents/ComputerVision/Image_processing/Dataset_split")
 DST_DIR = Path("/home/phamtiendat/Documents/ComputerVision/Image_processing/Dataset_preprocessed")
-TARGET_SIZE = 224
+TARGET_SIZE = 300
 DEDUP = True
 # ======================
 
