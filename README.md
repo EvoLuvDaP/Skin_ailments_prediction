@@ -1,7 +1,7 @@
 # Skin Ailment Prediction
 
 This project is a web application that utilizes a machine learning model to predict skin ailments from user-uploaded images. The model provides a list of potential conditions with corresponding probabilities, and a visual "Prediction Highlight" to show which part of the image was most influential in the decision.
-
+*   **Dataset:**  [Kaggle](https://www.kaggle.com/datasets/pacificrm/skindiseasedataset/data), [Mendeley](https://data.mendeley.com/datasets/3hckgznc67/1).
 *   **Backend:**  Flask.
 *   **Frame work & Model:** PyTorch + RestNet50.
 *   **Frontend:** HTML, CSS, and JavaScript for the user interface.
