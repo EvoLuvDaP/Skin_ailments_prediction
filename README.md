@@ -10,7 +10,7 @@ This project is a web application that utilizes a machine learning model to pred
 <div align="center">
   <img src="ui.png" alt="screenshot" width="640" />
 </div>
-##  Installation and Setup
+## Installation and Setup
 
 To get this project up and running on your local machine, follow these steps:
 
